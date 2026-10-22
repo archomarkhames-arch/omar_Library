@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>قيّم المكتبة</title>
+<style>
+@font-face{font-family:C;src:url(fonts/cairo-arabic-400-normal.woff2)}@font-face{font-family:C;font-weight:700;src:url(fonts/cairo-arabic-700-normal.woff2)}
+@font-face{font-family:C;src:url(fonts/cairo-latin-400-normal.woff2);unicode-range:U+0000-00FF}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#16181d;color:#eceae4;font:14px/1.6 C,Tahoma,sans-serif}
+.w{padding:18px 22px;display:flex;flex-direction:column;gap:10px;height:100%}
+h1{margin:0;font-size:20px}h1 span{color:#e0ac4a}
+p{margin:0;color:#a8a69f}
+.st{display:flex;gap:6px;justify-content:center;direction:ltr;margin:4px 0}
+.st button{background:none;border:0;font-size:38px;line-height:1;color:#3a3f48;cursor:pointer;padding:0 2px;transition:transform .1s}
+.st button.on{color:#e0ac4a}.st button:hover{transform:scale(1.12)}
+.lbl{text-align:center;color:#f3cf86;min-height:20px;font-weight:700}
+textarea{width:100%;min-height:90px;resize:vertical;background:#22262d;border:1px solid #3a3f48;border-radius:10px;color:inherit;font:inherit;padding:10px}
+textarea:focus{outline:none;border-color:#e0ac4a}
+.who{display:flex;gap:8px}.who label{flex:1;display:flex;gap:8px;align-items:center;background:#22262d;border:1px solid #3a3f48;border-radius:10px;padding:8px 10px;cursor:pointer}
+.who input{accent-color:#e0ac4a}
+.who label.on{border-color:#e0ac4a}
+.acts{display:flex;gap:8px;margin-top:auto}
+.btn{border:0;border-radius:10px;padding:10px 14px;font:700 14px C,Tahoma;cursor:pointer;background:#2b3038;color:#eceae4}
+.btn.g{background:#e0ac4a;color:#1a1408;flex:1}.btn:disabled{opacity:.5}
+.msg{min-height:18px;font-size:13px;color:#e5605a;text-align:center}
+.small{font-size:12px}
+</style>
+</head>
+<body>
+<div class="w" id="w">
+  <h1>رأيك في <span>مكتبة الاسكتش اب المتطورة</span> ⭐</h1>
+  <p>قيّم المكتبة بعد ما جربتها — رأيك بيفيد زمايلك وبيساعدنا نطورها.</p>
+  <div class="st" id="st"></div>
+  <div class="lbl" id="lbl"></div>
+  <textarea id="tx" maxlength="1200" placeholder="اكتب تجربتك: إيه أكتر حاجة عجبتك؟ وإيه اللي تحب نضيفه؟ (اختياري)"></textarea>
+  <div class="who">
+    <label class="on"><input type="radio" name="who" value="name" checked> انشر باسمي</label>
+    <label><input type="radio" name="who" value="anon"> مجهول الهوية</label>
+  </div>
+  <p class="small">التقييم بيظهر للكل على صفحة المكتبة بعد مراجعته من م. عمر خميس.</p>
+  <div class="msg" id="msg"></div>
+  <div class="acts">
+    <button class="btn g" id="send">إرسال التقييم</button>
+    <button class="btn" id="never">لا شكرًا</button>
+  </div>
+</div>
+<script>
+var stars = 0, L = ['', 'ضعيفة 😕', 'مقبولة', 'كويسة 🙂', 'جميلة جدًا 👌', 'ممتازة 🤩'];
+var st = document.getElementById('st');
+for (var i = 1; i <= 5; i++) (function (n) { var b = document.createElement('button'); b.textContent = '★'; b.title = n; b.onclick = function () { stars = n; paint(); }; st.appendChild(b); })(i);
+function paint() { Array.prototype.forEach.call(st.children, function (b, i) { b.classList.toggle('on', i < stars); }); document.getElementById('lbl').textContent = L[stars]; }
+Array.prototype.forEach.call(document.querySelectorAll('.who input'), function (r) { r.onchange = function () { Array.prototype.forEach.call(document.querySelectorAll('.who label'), function (l) { l.classList.toggle('on', l.querySelector('input').checked); }); }; });
+function cb(n, d) { if (window.sketchup && sketchup[n]) sketchup[n](JSON.stringify(d || {})); }
+document.getElementById('send').onclick = function () {
+  if (!stars) { document.getElementById('msg').textContent = 'اختار عدد النجوم الأول'; return; }
+  this.disabled = true; document.getElementById('msg').textContent = '';
+  cb('send', { stars: stars, text: document.getElementById('tx').value.trim(), anon: document.querySelector('.who input:checked').value === 'anon' });
+};
+document.getElementById('never').onclick = function () { cb('never'); };
+window.onSent = function (r) {
+  if (r && r.ok) { document.getElementById('w').innerHTML = '<h1 style="text-align:center;margin-top:60px">شكرًا ليك 🤍</h1><p style="text-align:center">تقييمك وصل، وهيظهر بعد المراجعة.</p><p style="text-align:center;margin-top:16px">لا تنسوا صاحب المكتبة من الدعاء<br><b style="color:#e0ac4a">عمر بن جمال خميس</b></p>'; setTimeout(function () { cb('close'); }, 2600); return; }
+  document.getElementById('send').disabled = false; document.getElementById('msg').textContent = (r && r.msg) || 'تعذر الإرسال — اتأكد من الإنترنت';
+};
+</script>
+</body>
+</html>
