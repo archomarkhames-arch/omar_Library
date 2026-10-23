@@ -931,3 +931,4 @@ html.guarded.ok-away .gd-stage,html.guarded.ok-away .bk-reader,html.guarded.ok-a
 @media (max-width:900px){.bd-body{flex-direction:column}.bd-side{width:auto;max-height:50%}}
 .bk-up{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--panel,#222);padding:10px 16px;border-radius:10px;display:flex;gap:10px;align-items:center;z-index:9500;box-shadow:0 4px 20px rgba(0,0,0,.5)}.bk-up .aispin{width:20px;height:20px;margin:0}
 .bk-shared .bk-sec{display:flex;align-items:center;gap:10px}.bk-shared .bk-addbook{font-size:12px}
+.shbig .lbx-img{width:min(1500px,92vw);height:auto;max-height:84vh;object-fit:contain}
