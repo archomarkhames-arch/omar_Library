@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>📸 ريندر — مكتبة م. عمر خميس</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/x.css">
+<style>
+  html, body { overflow: hidden; }
+  .xr { display: flex; height: 100vh; }
+  .xr-side { width: 300px; flex: none; background: var(--panel); border-left: 1px solid var(--line); padding: 12px; overflow: auto; }
+  .xr-main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #0d0f11; }
+  .xr-stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .xr-stage canvas { display: block; }
+  .xr-wrap { position: relative; direction: ltr; }
+  .xr-wrap canvas.mask { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .55; pointer-events: none; }
+  .xr-wrap.paint canvas.mask { pointer-events: auto; cursor: crosshair; }
+  .xr-before { position: absolute; top: 0; left: 0; overflow: hidden; pointer-events: none; }
+  .xr-before canvas { position: absolute; top: 0; left: 0; max-width: none !important; max-height: none !important; }
+  .xr-handle { position: absolute; top: 0; bottom: 0; width: 3px; background: #fff; cursor: ew-resize; box-shadow: 0 0 8px rgba(0,0,0,.6); }
+  .xr-handle span { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: #fff; color: #111; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .xr-bar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: var(--panel2); border-top: 1px solid var(--line); flex-wrap: wrap; }
+  .xr-bar .sp { flex: 1; }
+  .xr-side h4 { color: var(--accent); margin: 12px 0 6px; font-size: 12.5px; }
+  .xr-side select, .xr-side textarea, .xr-side input[type=text] { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line2); border-radius: 8px; padding: 6px 8px; font-family: inherit; }
+  .xr-side textarea { min-height: 64px; resize: vertical; }
+  .xr-q { display: flex; gap: 6px; }
+  .xr-q .chip { flex: 1; text-align: center; }
+  .xr-adj label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin: 3px 0; }
+  .xr-adj input { flex: 1; accent-color: var(--accent); }
+  .xr-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #ddd; background: rgba(0,0,0,.55); font-weight: 600; }
+  .xr-msg i { width: 34px; height: 34px; border-radius: 50%; border: 4px solid #444; border-top-color: var(--accent); animation: spin 1s linear infinite; }
+  .xr-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .xr-logo canvas { height: 34px; }
+  .xr-note { font-size: 11.5px; color: var(--muted); line-height: 1.7; }
+  .xr-eng { display: flex; gap: 6px; margin: 4px 0 8px; } .xr-eng .chip { flex: 1; text-align: center; font-weight: 700; }
+  .xr-row { display: flex; gap: 6px; margin-top: 6px; } .xr-row select { flex: 1; min-width: 0; }
+  .xr-sec { border: 1px solid var(--line2); border-radius: 10px; padding: 6px 8px; margin: 8px 0; } .xr-sec summary { cursor: pointer; color: var(--accent); font-weight: 700; font-size: 12.5px; }
+  .xr-adj b { min-width: 42px; text-align: center; font-size: 11.5px; color: var(--text); } .xr-adj select { flex: 1; }
+  .xr-hist { display: flex; gap: 6px; padding: 6px 10px; overflow-x: auto; background: #08090a; border-top: 1px solid var(--line); min-height: 64px; align-items: center; }
+  .xr-hist .h { flex: none; width: 88px; height: 56px; border-radius: 6px; background-size: cover; background-position: center; border: 2px solid transparent; cursor: pointer; position: relative; }
+  .xr-hi { flex: none; width: 92px; height: 56px; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: pointer; position: relative; } .xr-hi img { width: 100%; height: 100%; object-fit: cover; display: block; } .xr-hi.on { border-color: var(--accent); } .xr-hi .x { position: absolute; top: 2px; inset-inline-end: 2px; width: 18px; height: 18px; border-radius: 9px; border: 0; background: rgba(0,0,0,.65); color: #fff; font-size: 12px; line-height: 16px; padding: 0; cursor: pointer; display: none; } .xr-hi:hover .x { display: block; }
+  .xr-hist .h.on { border-color: var(--accent); } .xr-hist .h b { position: absolute; bottom: 0; inset-inline: 0; font-size: 9.5px; background: rgba(0,0,0,.6); color: #fff; text-align: center; font-weight: 400; }
+  .xr-hist .lbl { color: var(--muted); font-size: 11.5px; flex: none; }
+  .xr-prog { height: 4px; background: var(--line); border-radius: 3px; overflow: hidden; width: 160px; } .xr-prog i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  .xr-eng{display:flex;gap:0;border:1px solid var(--line2);border-radius:10px;overflow:hidden}.xr-eng .chip{flex:1;border-radius:0;border:0;padding:9px 6px;font-weight:700}.xr-eng .chip.on{background:var(--accent);color:var(--on-accent,#111)}
+  .btn.flash{animation:okflash .5s 3}@keyframes okflash{50%{box-shadow:0 0 0 4px var(--accent);transform:scale(1.04)}}
+</style>
+<script src="js/i18n.js"></script>
+</head>
+<body>
+<div class="xr">
+  <aside class="xr-side">
+    <div class="xr-logo"><canvas id="xrLogo" width="420" height="80"></canvas></div>
+    <div class="xr-eng"><button class="chip on" data-eng="pt">🎯 واقعي — مجاني</button><button class="chip" data-eng="ai">🤖 ذكاء اصطناعي</button></div>
+    <div id="ptPanel">
+      <p class="xr-note"><b style="color:var(--accent)">OK Render</b> — محرك ريندر المكتبة نفسها على كارت الشاشة بتاعك: ضوء وانعكاسات وظلال حقيقية (Path Tracing) زي الفيري والكورونا — من غير إنترنت ولا مفتاح. بيرندر أي موديل حتى لو متظبط للفيري (الخامات والتكسشرز والإضاءات بتاعته).</p>
+      <h4>💬 وصف المشهد (اختياري)</h4>
+      <textarea id="ptPrompt" placeholder="مثلاً: غروب دافي من الشباك، إضاءة مخفية، عمق ميدان على الكنبة — أو: ليل بإضاءة السقف"></textarea>
+      <div class="xbtns"><button class="btn sm" id="ptApplyPrompt">✨ طبّق الوصف على الإعدادات</button></div>
+      <div class="xr-note" id="ptPromptRes"></div>
+      <details class="xr-sec" open><summary>🎬 الجودة والنويز</summary>
+        <div class="xr-q" id="ptPreset"><button class="chip" data-p="draft">مسودة</button><button class="chip on" data-p="medium">متوسط</button><button class="chip" data-p="high">عالي</button><button class="chip" data-p="ultra">نهائي</button></div>
+        <div class="xr-adj">
+          <label>مستوى النويز المسموح <select id="ptNoise"><option value="0.02">عالي (أسرع)</option><option value="0.008" selected>متوسط</option><option value="0.004">قليل</option><option value="0.002">قليل جدًا (نهائي)</option></select></label>
+          <label>حد الوقت <select id="ptTime"><option value="1">دقيقة</option><option value="3" selected>3 دقايق</option><option value="8">8 دقايق</option><option value="20">20 دقيقة</option><option value="0">من غير حد</option></select></label>
+          <label>أقصى عينات <select id="ptQ"><option value="96">96</option><option value="384" selected>384</option><option value="1200">1200</option><option value="4000">4000</option></select></label>
+          <label>إزالة النويز <select id="ptDn"><option value="off">بدون</option><option value="low">خفيفة</option><option value="on" selected>متوسطة</option><option value="high">قوية</option></select></label>
+          <label>المقاس <select id="ptW"><option value="1280">1280</option><option value="1920" selected>Full HD 1920</option><option value="2560">2.5K</option><option value="3840">4K</option></select></label>
+        </div>
+        <p class="xr-note">«العينات» = عدد المرات اللي كل بكسل بيتحسب فيها؛ كل ما تزيد النويز يقل. الريندر بيقف لوحده أول ما يوصل لمستوى النويز اللي اخترته أو الوقت — مش لازم يكمل لآخر رقم.</p>
+      </details>
+      <details class="xr-sec"><summary>📷 الكاميرا</summary>
+        <div class="xr-row"><select id="ptCam"><option value="auto">تلقائي — زي كاميرا سكتش أب</option><option value="manual">يدوي — أظبطها أنا</option></select></div>
+        <div class="xr-adj" id="ptCamManual">
+          <label>البعد البؤري (مم) <input type="range" id="ptFocal" min="12" max="135" step="1" value="28"><b id="ptFocalV">28</b></label>
+          <label class="xchk"><input type="checkbox" id="ptTwoPt" checked> تصحيح رأسي (الحيطان مستقيمة — 2 Point)</label>
+          <label class="xchk"><input type="checkbox" id="ptDof"> عمق ميدان (خلفية مغبّشة)</label>
+          <label>فتحة العدسة f/ <input type="range" id="ptFstop" min="1.4" max="16" step="0.1" value="2.8"><b id="ptFstopV">2.8</b></label>
+          <label>مسافة الفوكس (م، 0 = هدف الكاميرا) <input type="range" id="ptFocus" min="0" max="20" step="0.1" value="0"><b id="ptFocusV">تلقائي</b></label>
+        </div>
+        <div class="xr-adj">
+          <label>التعريض EV <input type="range" id="ptEv" min="-3" max="3" step="0.1" value="0"><b id="ptEvV">0</b></label>
+          <label class="xchk"><input type="checkbox" id="ptAutoExp" checked> تعريض تلقائي</label>
+          <label>توازن الأبيض (كلفن) <input type="range" id="ptWb" min="3000" max="9000" step="100" value="6500"><b id="ptWbV">6500</b></label>
+          <label>الألوان <select id="ptTone"><option value="neutral">ألوان حقيقية (محايد)</option><option value="agx">فيلمي ناعم (AgX)</option><option value="aces">تباين عالي (ACES)</option></select></label>
+        </div>
+      </details>
+      <details class="xr-sec"><summary>☀ الشمس</summary>
+        <div class="xr-row"><select id="ptSun"><option value="model">شمس الموديل (إعدادات الظل)</option><option value="custom">شمس بإعداداتي</option><option value="off">من غير شمس</option></select></div>
+        <div class="xr-adj" id="ptSunCustom">
+          <label>الساعة <input type="range" id="ptHour" min="5.5" max="19.5" step="0.25" value="15"><b id="ptHourV">15:00</b></label>
+          <label>الاتجاه <input type="range" id="ptAz" min="0" max="360" step="5" value="210"><b id="ptAzV">210°</b></label>
+          <label>قوة الشمس <input type="range" id="ptSunI" min="0" max="8" step="0.25" value="3"></label>
+        </div>
+      </details>
+      <details class="xr-sec"><summary>🌄 السما و HDRI</summary>
+        <select id="ptEnv"><option value="sky">سما صافية</option><option value="park">نهار — حديقة</option><option value="city">نهار — مدينة</option><option value="sunset">غروب ذهبي</option><option value="dawn">شروق ناعم</option><option value="apartment">داخلي — شقة</option><option value="lobby">داخلي — لوبي</option><option value="studio">استوديو (منتجات)</option><option value="night">ليل</option><option value="custom">📁 HDRI من جهازي</option></select>
+        <div class="xbtns"><button class="btn sm" id="ptHdriBtn">📁 اختار HDRI (.hdr / .exr / .jpg)</button><span class="xr-note" id="ptHdriName"></span></div>
+        <div class="xr-row"><select id="ptBg"><option value="env">الخلفية: السما / الـ HDRI</option><option value="sky">الخلفية: سما ناعمة</option><option value="white">الخلفية: أبيض</option></select><select id="ptGround"><option value="gray">أرضية رمادي</option><option value="grass">أرضية نجيل</option><option value="none">بدون أرضية</option></select></div>
+        <div class="xr-adj">
+          <label>قوة السما <input type="range" id="ptEnvI" min="0.1" max="3" step="0.05" value="1"></label>
+          <label>لف السما <input type="range" id="ptRot" min="0" max="360" step="5" value="0"></label>
+        </div>
+      </details>
+      <details class="xr-sec"><summary>💡 الإضاءة الصناعية</summary>
+        <div class="xr-row"><select id="ptIn"><option value="0">إضاءة سقف إضافية: لا</option><option value="3">إضاءة سقف هادية</option><option value="7">إضاءة سقف قوية</option></select></div>
+        <div class="xr-adj"><label>قوة الإضاءات اللي في الموديل (LED، لمبات، إضاءات الفيري) <input type="range" id="ptLightI" min="0" max="4" step="0.1" value="1"></label></div>
+        <p class="xr-note" id="ptLightsInfo"></p>
+      </details>
+      <div class="xbtns" style="margin-top:10px"><button class="btn accent" id="ptGo">🎯 ابدأ الريندر</button><button class="btn" id="ptStop">⏹ كفاية كده</button></div>
+      <p class="xr-note" id="ptGpu"></p>
+    </div>
+    <div id="aiPanel" style="display:none">
+    <h4>الجودة</h4>
+    <div class="xr-q"><button class="chip on" data-q="fast">⚡ مجاني (سيرفر المكتبة)</button><button class="chip" data-q="high">💎 أعلى جودة (مفتاحك)</button></div>
+    <label class="xchk" style="margin-top:6px"><input type="checkbox" id="xrUsePT" checked> ابدأ من الريندر الواقعي اللي على الشاشة (أدق وأحلى بكتير) — اعمل 🎯 الأول</label>
+    <h4>نوع الصورة</h4>
+    <select id="xrMode"><option value="real">ريندر واقعي — نفس الزاوية والشكل</option><option value="night">ليلي بالإضاءة</option><option value="sketch">اسكتش يدوي ألوان مائية</option><option value="cutaway">مجسم أيزومتري (Dollhouse)</option><option value="moodboard">مود بورد خامات</option></select>
+    <h4>الإضاءة</h4>
+    <select id="xrLight"><option value="keep">زي الموديل</option><option value="day">نهار طبيعي</option><option value="golden">الغروب الذهبي</option><option value="overcast">نهار غائم ناعم</option><option value="night">ليل دافي</option><option value="studio">استوديو</option><option value="dramatic">درامي</option></select>
+    <h4>الستايل</h4>
+    <select id="xrStyle"><option value="keep">زي التصميم</option><option value="modern">مودرن</option><option value="classic">كلاسيك</option><option value="neo">نيو كلاسيك</option><option value="minimal">مينيمال</option><option value="japandi">جابندي</option><option value="industrial">إندستريال</option><option value="luxury">فخم</option><option value="scandi">إسكندنافي</option><option value="arabic">عربي معاصر</option><option value="boho">بوهو</option></select>
+    <h4>وصف (اختياري)</h4>
+    <textarea id="xrPrompt" placeholder="مثلاً: خشب جوز، رخام أبيض، إضاءة مخفية دافية"></textarea>
+    <div class="xbtns" style="margin-top:10px"><button class="btn" id="xrShot">📷 خد المنظور الحالي</button><button class="btn accent" id="xrGo">✨ ريندر</button></div>
+    </div>
+    <h4>تعديل جزء من الصورة</h4>
+    <div class="xbtns"><button class="btn" id="xrBrush">🖌 لوّن الجزء</button><button class="btn ghost" id="xrClear">مسح</button></div>
+    <div class="xr-adj"><label>حجم الفرشاة <input type="range" id="xrSize" min="8" max="120" value="40"></label></div>
+    <input type="text" id="xrEdit" placeholder="مثلاً: كنبة جلد بني بدل دي">
+    <div class="xbtns"><button class="btn" id="xrInp">🪄 غيّر الجزء ده</button></div>
+    <h4>تظبيط الصورة</h4>
+    <div class="xr-adj">
+      <label>الإضاءة <input type="range" data-a="exp" min="-50" max="50" value="0"></label>
+      <label>التباين <input type="range" data-a="con" min="-50" max="50" value="0"></label>
+      <label>الدفا <input type="range" data-a="warm" min="-50" max="50" value="0"></label>
+      <label>التشبع <input type="range" data-a="sat" min="-50" max="50" value="0"></label>
+      <label>تغميق الأطراف <input type="range" data-a="vig" min="0" max="60" value="0"></label>
+    </div>
+    <p class="xr-note">لوجو المكتبة بيتحط تحت الصورة تلقائي في الحفظ. الجودة «العالي» بتستخدم مفتاحك (Gemini / OpenAI) من إعدادات المكتبة لو موجود — غير كده بيرجع للسريع.</p>
+  </aside>
+  <section class="xr-main">
+    <div class="xr-stage"><div class="xr-wrap" id="xrWrap"><canvas id="xrCv"></canvas><div class="xr-before"><canvas id="xrBefore"></canvas></div><div class="xr-handle" style="display:none"><span>⇆</span></div><canvas class="mask" id="xrMask"></canvas></div><div class="xr-msg" id="xrMsg"><span>خد المنظور الحالي واضغط «ريندر»</span></div></div>
+    <div class="xr-hist" id="xrHist"><span class="lbl">🕘 الريندرات اللي فاتت</span></div>
+    <div class="xr-bar"><span id="xrLeft" style="color:var(--muted)"></span><div class="xr-prog" id="ptProg" style="display:none"><i></i></div><span id="ptInfo" style="color:var(--muted);font-size:12px"></span><span class="sp"></span><button class="btn" id="xrUndo">↶ رجوع</button><button class="btn" id="xrPng">💾 PNG</button><button class="btn accent" id="xrJpg">💾 حفظ JPG</button></div>
+  </section>
+</div>
+<script>window.HS = window.HS || {}; HS.toast = function (m) { var e = document.getElementById('xrLeft'); if (e) e.textContent = m; };</script>
+<script src="js/x_core.js"></script>
+<script src="data/materials.js"></script>
+<script src="js/xrender_page.js"></script>
+<script src="js/xr_pt.js"></script>
+</body>
+</html>

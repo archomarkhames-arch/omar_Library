@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>مكتبة م. عمر خميس</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/x.css">
 <link rel="stylesheet" href="css/book.css">
 </head>
 <body>
@@ -20,6 +21,7 @@
  <button class="btn wa-btn" id="btnWa" title="كلّم م. عمر خميس على واتساب مباشرة"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.2a9.8 9.8 0 0 0-8.5 14.7L2.2 21.8l5-1.3A9.8 9.8 0 1 0 12 2.2zm0 1.8a8 8 0 1 1-4.1 14.9l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 0 1 12 4z"/><path fill="currentColor" d="M9.1 7.3c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4.9 2.9.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3l-2-1c-.3-.1-.5-.2-.7.1l-.9 1.2c-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.2c-.2-.5-.4-.5-.6-.5z"/></svg><span>واتساب</span></button>
  <button class="btn ghost" id="btnSuggest" title="اقتراحات وتواصل عبر واتساب"><span class="i">💬</span> اقتراحات</button>
  <button class="btn ghost" id="btnRate" title="قيّم المكتبة"><span class="i">⭐</span> قيّم المكتبة</button>
+ <button class="btn ghost" id="btnDiag" title="لو أي زرار مش شغال: التشخيص بيجمع المشكلة في رسالة تبعتها لـ م. عمر" onclick="window.HS&&HS.diag&&HS.diag()"><span class="i">🩺</span> تشخيص</button>
       <button class="btn ghost" id="btnEditSel" title="تعديل البلوك المحدد في الموديل"><span class="i">✎</span> تعديل المحدد</button>
       <button class="btn ghost" id="btnUpdate" title="التحقق من التحديثات"><span class="i">⟳</span> <span id="updLabel">تحديثات</span><span class="dot hidden" id="updDot"></span></button>
     </div>
@@ -29,12 +31,14 @@
     <button data-tab="blocks" class="on">البلوكات <b id="cntBlocks">0</b></button>
     <button data-tab="mats">الخامات <b id="cntMats">0</b></button>
     <button data-tab="mine"><span id="mineLabel">مكتبتي</span> <b id="cntMine">0</b><i class="reqbadge hidden" id="cntReq" title="طلبات إضافة مستنية موافقتك">0</i></button>
+    <button data-tab="services" class="studio-tab svc-tab">✨ الخدمات</button>
     <button data-tab="studio" class="studio-tab">✦ الاستوديو</button>
     <button data-tab="boq" class="studio-tab">₪ الحصر والتسعير</button>
     <button data-tab="draw" class="studio-tab">📐 الشوب دروينج</button>
     <button data-tab="guide" class="studio-tab">📚 الأسس التصميمية</button>
     <button data-tab="keys" class="studio-tab">⌨ اختصارات سكتش اب</button>
     <button data-tab="favs">المفضلة <b id="cntFavs">0</b></button>
+    <button data-tab="help" class="studio-tab">📖 شرح المكتبة</button>
     <button data-tab="settings">الإعدادات</button>
     <button data-tab="admin" class="admin-only studio-tab">⚙ لوحة التحكم</button>
   </nav>
@@ -47,6 +51,7 @@
         <div class="toolbar">
           <div class="search"><span>⌕</span><input id="q" type="search" placeholder="ابحث باسم البلوك أو الكود... (مثال: سفلية 60، باب زجاج، نخلة)"></div>
           <button class="btn accent" id="btnAdd" title="أضف بلوك أو مشهد من الموديل — خاص بيك أو للعامة">＋ إضافة بلوك</button>
+          <button class="btn" id="btnDescAdd" title="اكتب اللي عايزه بالكلام والمكتبة تطلعهولك بالمقاسات والخامات" onclick="window.HS&&HS.describeAddOpen&&HS.describeAddOpen()">✨ ضيف بالوصف</button>
           <div class="crumbs" id="crumbs"></div>
           <label class="sizer" title="حجم الكروت">▣ <input type="range" id="cardSize" min="120" max="260" step="10" value="170"></label>
         </div>
@@ -174,10 +179,13 @@
                 <div class="aibox-h">🤖 <b>الذكاء الاصطناعي الخاص بالمكتبة</b> <small id="aiInfo">مجاني — محتاج إنترنت</small></div>
                 <textarea id="aiPrompt" class="aip aip-big" rows="3" placeholder="اكتب اللي عايزه (عربي أو إنجليزي): مثلًا «ريسيبشن مودرن بيج وخشب جوز، إضاءة مخفية، رخام على الحيطة» — أو سيبها فاضية للريندر الواقعي من الموديل"></textarea>
                 <div class="tbtns">
-                  <label class="mini">نوع الصورة <select id="aiMode"><option value="text" selected>✨ صورة من الوصف (اكتب واضغط)</option><option value="real">ريندر واقعي من الموديل (نهار)</option><option value="night">ريندر ليلي بالإضاءة</option><option value="moodboard">مود بورد خامات وألوان</option><option value="isometric">أيزومتري مفكك بأسماء الخامات</option><option value="exploded">المشهد المفكك ← واقعي</option><option value="cutaway">مجسم أيزومتري (Dollhouse)</option><option value="sketch">اسكتش يدوي ألوان مائية</option></select></label>
-                  <label class="mini">الستايل <select id="aiStyle"><option value="keep" selected>زي التصميم</option><option value="modern">مودرن</option><option value="classic">كلاسيك</option><option value="neo">نيو كلاسيك</option><option value="minimal">مينيمال</option><option value="boho">بوهو</option><option value="japandi">جابندي</option><option value="industrial">إندستريال</option><option value="luxury">فخم (رخام ونحاس)</option></select></label>
+                  <label class="mini">نوع الصورة <select id="aiMode"><option value="real" selected>ريندر واقعي للمشهد اللي قدامك (نهار)</option><option value="text">✨ صورة من الوصف بس (من غير الموديل)</option><option value="night">ريندر ليلي بالإضاءة</option><option value="moodboard">مود بورد خامات وألوان</option><option value="isometric">أيزومتري مفكك بأسماء الخامات</option><option value="exploded">المشهد المفكك ← واقعي</option><option value="cutaway">مجسم أيزومتري (Dollhouse)</option><option value="sketch">اسكتش يدوي ألوان مائية</option></select></label>
+                  <label class="mini">الستايل <select id="aiStyle"><option value="keep" selected>زي التصميم</option><option value="modern">مودرن</option><option value="classic">كلاسيك</option><option value="neo">نيو كلاسيك</option><option value="minimal">مينيمال</option><option value="boho">بوهو</option><option value="japandi">جابندي</option><option value="industrial">إندستريال</option><option value="luxury">فخم (رخام ونحاس)</option><option value="scandi">إسكندنافي</option><option value="medit">متوسطي (أبيض وطوب)</option><option value="arabic">عربي معاصر (مشربية)</option><option value="wabi">وابي سابي</option><option value="artdeco">آرت ديكو</option><option value="coastal">ساحلي</option></select></label>
+                  <label class="mini">الإضاءة في الريندر <select id="aiLight"><option value="keep" selected>زي الموديل</option><option value="day">نهار طبيعي</option><option value="golden">ساعة الغروب الذهبية</option><option value="overcast">نهار غائم ناعم</option><option value="night">ليل بإضاءة دافية</option><option value="studio">إضاءة استوديو</option><option value="dramatic">درامي (تباين عالي)</option></select></label>
                   <button class="btn accent" data-studio="renderAI">🤖 اعمل الصورة</button>
                   <button class="btn accent" id="boardBtn" title="لوحات عرض A3 زي المكاتب الكبيرة: منظور + مسقط + واجهات + خامات + جدول أثاث + لوجو — وتقدر تحط ريندر من أي برنامج">📐 لوحات العرض</button>
+                  <button class="btn accent" id="archBtn" title="أرض + اشتراطات + برنامج ← بدائل مفحوصة تعدّلها بإيدك ← مجسم 3D + مساقط بمحاور وأبعاد + واجهة + قطاع + حصر">🏗 المصمم المعماري</button>
+                  <button class="btn" id="designRevBtn" title="بيفحص الموديل زي مصمم: السجادة تحت الجلسة، المسافات والممرات، ارتفاع الشاشة، التناسب، طبقات الإضاءة — وزرار «صلّحها» جنب كل ملاحظة" onclick="HS.designReview &amp;&amp; HS.designReview()">🧑‍🎨 مراجعة المصمم</button>
                   <button class="btn" id="imgEdBtn" title="عدّل أي صورة: ريندر المكتبة أو ريندر من V-Ray / Enscape / Lumion / D5 — إضاءة وألوان وسما وقبل/بعد">🎨 محرر الصور</button>
                   <button class="btn" id="proPrompt" title="برومبت احترافي جاهز لـ Gemini / ChatGPT / Midjourney — لأعلى جودة">📋 برومبت احترافي (لأي برنامج)</button>
                 </div>
@@ -205,8 +213,8 @@
             <div class="st-card tool">
               <div class="st-h"><span class="st-ic">📏</span><div><b>الأبعاد وأدوات الرسم</b><small>أبعاد تلقائية، أبعاد متسلسلة، مناسيب حائط المطبخ، وملء المسافة بالظبط</small></div></div>
               <div class="tbtns">
-                <button class="btn accent" data-studio="dims">📏 أبعاد للمحدد</button>
-                <button class="btn" data-studio="dimsChain">⟷ أبعاد متسلسلة للصف</button>
+                <button class="btn accent" data-studio="dims" title="ضغطة تضيف الأبعاد وضغطة تانية على نفس الوحدات تشيلها">📏 أبعاد للمحدد (إضافة / إزالة)</button>
+                <button class="btn" data-studio="dimsChain" title="ضغطة تضيف وضغطة تانية تشيل">⟷ أبعاد متسلسلة للصف (إضافة / إزالة)</button>
                 <button class="btn" data-studio="wallGuides">≡ مناسيب حائط المطبخ (حدد الحائط)</button>
                 <button class="btn" data-studio="fillGap">⇤⇥ ملء المسافة للوحدة المحددة</button>
                 <button class="btn" data-studio="dimsToggle">إظهار / إخفاء الأبعاد</button>
@@ -248,6 +256,9 @@
       <div class="content wide" id="drawBody"></div>
     </section>
     
+    <section class="pane" id="pane-services">
+      <div class="content wide" id="svcBody"></div>
+    </section>
     <section class="pane" id="pane-keys">
       <div class="content wide" id="scPane"></div>
     </section>
@@ -261,6 +272,9 @@
     </section>
 
     
+    <section class="pane" id="pane-help">
+      <div class="content wide" id="helpBody"></div>
+    </section>
     <section class="pane" id="pane-settings">
       <div class="content wide settings" id="settingsBody"></div>
     </section>
@@ -282,7 +296,10 @@
         <button class="btn ghost" id="edReset" title="رجوع للقيم الافتراضية">↺ افتراضي</button>
         <button class="btn ghost" id="edSavePreset" title="احفظ البلوك بالمقاسات دي في مكتبتك — خاص بيك أو للعامة">＋ إضافة للمكتبة</button>
         <label class="ed-live" id="edLiveW" title="أي تغيير يظهر في الموديل على طول — «تطبيق» يثبّته و ✕ يرجّع البلوك زي ما كان"><input type="checkbox" id="edLive"> 👁 مباشر في الموديل</label>
+        <button class="btn ghost" id="edUndo" title="تراجع (Ctrl+Z)">↶</button>
+        <button class="btn ghost" id="edRedo" title="إعادة (Ctrl+Y)">↷</button>
         <button class="btn" id="edApply">✓ تطبيق على المحدد</button>
+        <button class="btn" id="edSimilar" style="display:none" title="نفس التعديل على كل الوحدات اللي من نفس النوع في الموديل">⧉ طبّق على المشابه</button>
         <button class="btn accent" id="edInsert">⤓ إدراج في المشهد</button>
         <button class="btn ghost x" id="edClose">✕</button>
       </div>
@@ -291,6 +308,8 @@
       <div class="ed-preview">
         <canvas id="edCanvas"></canvas>
         <div class="pv-tools">
+          <button class="chip accent" id="pvInner" style="display:none" title="أقسام بعروض مختلفة + رفوف وأدراج وشماعات لكل قسم">🧩 محرر التقسيم</button>
+          <button class="chip" id="pvStudio" title="إضاءة استوديو + خامات حقيقية + ظلال">🎬 استوديو</button>
           <button class="chip" id="pvXray" title="إظهار الداخل">◐ إظهار الداخل</button>
           <button class="chip" id="pvOpen" title="فتح الضلف والأدراج">⇆ فتح الضلف</button>
           <button class="chip" id="pvFront">أمامي</button>
@@ -335,6 +354,9 @@
 <script src="data/paints.js"></script>
 <script src="js/geom.js"></script>
 <script src="js/render.js"></script>
+<script src="lib/three.min.js"></script>
+<script src="lib/RoomEnvironment.js"></script>
+<script src="js/render3d.js"></script>
 <script src="js/catalog.js"></script>
 <script src="js/gen_kitchen.js"></script>
 <script src="js/gen_wardrobe.js"></script>
@@ -344,6 +366,11 @@
 <script src="js/gen_finishes.js"></script>
 <script src="js/gen_extra.js"></script>
 <script src="js/gen_trend.js"></script>
+<script src="js/gen_179.js"></script>
+<script src="js/gen_x.js"></script>
+<script src="js/gen_pv.js"></script>
+<script src="js/gen_classic.js"></script>
+<script src="js/gen_param.js"></script>
 <script src="js/presets_kitchen.js"></script>
 <script src="js/presets_wardrobe.js"></script>
 <script src="js/presets_furniture.js"></script>
@@ -354,9 +381,12 @@
 <script src="js/presets_styles.js"></script>
 <script src="js/presets_collections.js"></script>
 <script src="js/presets_market.js"></script>
+<script src="js/presets_179.js"></script>
 <script src="data/scenes.js"></script>
 <script src="js/prices.js"></script>
+<script src="js/prices_local.js"></script>
 <script src="js/wizard.js"></script>
+<script src="js/real.js"></script>
 <script>if (HS.i18nApplyData) HS.i18nApplyData();</script>
 <script src="js/app.js"></script>
 <script src="js/studio.js"></script>
@@ -371,17 +401,49 @@
 <script src="js/layout.js"></script>
 <script src="js/share.js"></script>
 <script src="js/boq.js"></script>
+<script src="js/dxf.js"></script>
+<script src="js/nest.js"></script>
+<script src="js/wardrobe_editor.js"></script>
+<script src="js/design_review.js"></script>
+<script src="js/archgen.js"></script>
+<script src="js/archgen_ui.js"></script>
+<script src="js/quickrender.js"></script>
 <script src="js/shop.js"></script>
 <script>document.write('<script src="js/guide_data' + (HS.lang === 'en' ? '_en' : '') + '.js"><\/script>');</script>
 <script src="js/guide_cmp.js"></script>
 <script src="js/guide_more.js"></script>
 <script src="js/guide_x.js"></script>
+<script src="js/guide_179.js"></script>
+<script src="js/guide_x2.js"></script>
 <script src="js/books_data.js"></script>
+<script src="js/ask_books.js"></script>
 <script src="js/bookreader.js"></script>
 <script src="js/bookmd.js"></script>
 <script src="js/summaryreader.js"></script>
 <script src="js/bookeditor.js"></script>
 <script src="js/guide.js"></script>
 <script src="js/shortcuts.js"></script>
+<script src="lib/qrcode.min.js"></script>
+<script src="js/x_core.js"></script>
+<script src="js/x_prod.js"></script>
+<script src="js/x_prod_pages.js"></script>
+<script src="js/x_prod_ui.js"></script>
+<script src="js/x_draw.js"></script>
+<script src="js/x_draw_ui.js"></script>
+<script src="js/x_ai.js"></script>
+<script src="js/x_board.js"></script>
+<script src="js/x_grad.js"></script>
+<script src="lib/mp4-muxer.min.js"></script>
+<script src="js/x_video.js"></script>
+<script src="js/x_edit.js"></script>
+<script src="js/x_arch.js"></script>
+<script src="js/x_cad.js"></script>
+<script src="js/x_help.js"></script>
+<script src="js/x_lang.js"></script>
+<script src="js/x_pv.js"></script>
+<script src="js/x_style.js"></script>
+<script src="js/x_fin.js"></script>
+<script src="js/x_services.js"></script>
+<script src="js/x_sceneshot.js"></script>
 </body>
 </html>
