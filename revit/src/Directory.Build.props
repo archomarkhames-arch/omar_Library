@@ -1,0 +1,7 @@
+<Project>
+  <!-- one obj folder per Revit version so 2017 → 2027 can be built one after another -->
+  <PropertyGroup>
+    <RevitVersion Condition="'$(RevitVersion)' == ''">2025</RevitVersion>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj\$(RevitVersion)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Built once per Revit version:  dotnet build -c Release -p:RevitVersion=2025
+       The GitHub workflow (.github/workflows/revit-build.yml) builds 2017 → 2027 and the installer. -->
+  <PropertyGroup>
+    <RevitVersion Condition="'$(RevitVersion)' == ''">2025</RevitVersion>
+    <TargetFramework Condition="$(RevitVersion) &lt;= 2024">net48</TargetFramework>
+    <TargetFramework Condition="$(RevitVersion) &gt;= 2025 And $(RevitVersion) &lt;= 2026">net8.0-windows</TargetFramework>
+    <TargetFramework Condition="$(RevitVersion) &gt;= 2027">net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>OmarKhamis.Revit</AssemblyName>
+    <RootNamespace>OmarKhamis.Revit</RootNamespace>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Version>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)version.txt').Trim())</Version>
+    <Company>Eng. Omar Khamis</Company>
+    <Product>Omar Khamis Revit Library</Product>
+    <Copyright>© 2026 Eng. Omar Khamis</Copyright>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <DefineConstants>$(DefineConstants);R$(RevitVersion)</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2018">$(DefineConstants);RV2018_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2019">$(DefineConstants);RV2019_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2020">$(DefineConstants);RV2020_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2021">$(DefineConstants);RV2021_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2022">$(DefineConstants);RV2022_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2023">$(DefineConstants);RV2023_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2024">$(DefineConstants);RV2024_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2025">$(DefineConstants);RV2025_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2026">$(DefineConstants);RV2026_UP</DefineConstants>
+    <DefineConstants Condition="$(RevitVersion) &gt;= 2027">$(DefineConstants);RV2027_UP</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Nice3point.Revit.Api.RevitAPI" Version="$(RevitVersion).*" ExcludeAssets="runtime" PrivateAssets="all" />
+    <PackageReference Include="Nice3point.Revit.Api.RevitAPIUI" Version="$(RevitVersion).*" ExcludeAssets="runtime" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\*.png" LogicalName="OKR.%(Filename).png" />
+  </ItemGroup>
+</Project>
