@@ -118,6 +118,8 @@
             <div class="ai-box">
               <textarea id="aiText" rows="2" placeholder="اختياري — اكتب وصف الفراغ بالعربي، مثال: غرفة نوم 4×5 م سقف 3 م الباب في الحائط الجنوبي على اليمين، السرير على الحائط الشمالي، دولاب زجاج بإضاءة، ستايل مودرن رمادي وجوز"></textarea>
               <button class="btn" id="aiParse">🤖 افهم الوصف بالذكاء الاصطناعي</button>
+              <button class="btn accent" id="aiPhotos">📷 من الصورة للموديل (فراغ / واجهة / قطعة 3D)</button>
+              <button class="btn" id="facadeBtn">🏛 مصمم الواجهات (فيلا / مكاتب / محل)</button>
             </div>
             <div class="tracer-cta"><button class="btn accent" id="openTracer">📄 ابدأ من مسقط PDF أو صورة</button><small>ارفع المسقط المعماري، حدد الغرف عليه، وكل غرفة تتبني في مكانها</small></div>
             <div class="wiz-return hidden" id="wizReturn"><span>بتعدل تفاصيل غرفة من المسقط</span><button class="btn accent" id="wizSaveReturn">↩ حفظ والرجوع للمسقط</button></div>
@@ -179,7 +181,8 @@
                 <div class="aibox-h">🤖 <b>الذكاء الاصطناعي الخاص بالمكتبة</b> <small id="aiInfo">مجاني — محتاج إنترنت</small></div>
                 <textarea id="aiPrompt" class="aip aip-big" rows="3" placeholder="اكتب اللي عايزه (عربي أو إنجليزي): مثلًا «ريسيبشن مودرن بيج وخشب جوز، إضاءة مخفية، رخام على الحيطة» — أو سيبها فاضية للريندر الواقعي من الموديل"></textarea>
                 <div class="tbtns">
-                  <label class="mini">نوع الصورة <select id="aiMode"><option value="real" selected>ريندر واقعي للمشهد اللي قدامك (نهار)</option><option value="text">✨ صورة من الوصف بس (من غير الموديل)</option><option value="night">ريندر ليلي بالإضاءة</option><option value="moodboard">مود بورد خامات وألوان</option><option value="isometric">أيزومتري مفكك بأسماء الخامات</option><option value="exploded">المشهد المفكك ← واقعي</option><option value="cutaway">مجسم أيزومتري (Dollhouse)</option><option value="sketch">اسكتش يدوي ألوان مائية</option></select></label>
+                  <label class="mini">نوع الصورة <select id="aiMode"><option value="real" selected>ريندر واقعي للمشهد اللي قدامك (نهار)</option><option value="text">✨ صورة من الوصف بس (من غير الموديل)</option><option value="night">ريندر ليلي بالإضاءة</option><option value="moodboard">مود بورد خامات وألوان</option><option value="isometric">أيزومتري مفكك بأسماء الخامات</option><option value="exploded">المشهد المفكك ← واقعي</option><option value="cutaway">مجسم أيزومتري (Dollhouse)</option><option value="sketch">اسكتش يدوي ألوان مائية</option><option value="exterior">🏛 ريندر خارجي نهار (واجهات)</option><option value="exterior_dusk">🌆 ريندر خارجي غروب بإضاءة LED</option><option value="stand">🎪 جناح معرض في صالة</option></select></label>
+                  <label class="mini">📷 لوك احترافي جاهز <select id="aiLook"><option value="" selected>بدون (حسب الاختيارات)</option><option value="villa_dusk">فيلا عربية حديثة — غروب وLED (الريندر الشهير)</option><option value="villa_day">فيلا عربية حديثة — نهار</option><option value="villa_minimal">فيلا مينيمال</option><option value="classic_facade">واجهة كلاسيك</option><option value="office_day">عمارة مكاتب زجاج وحجر</option><option value="office_lobby">لوبي مكاتب رخام وزجاج</option><option value="office_corridor">ممر مكاتب بارتيشن زجاج</option><option value="luxury_blue">غرفة نوم فخمة أزرق وأبيض</option><option value="stand_hall">جناح معرض (ميديا سنتر)</option></select></label>
                   <label class="mini">الستايل <select id="aiStyle"><option value="keep" selected>زي التصميم</option><option value="modern">مودرن</option><option value="classic">كلاسيك</option><option value="neo">نيو كلاسيك</option><option value="minimal">مينيمال</option><option value="boho">بوهو</option><option value="japandi">جابندي</option><option value="industrial">إندستريال</option><option value="luxury">فخم (رخام ونحاس)</option><option value="scandi">إسكندنافي</option><option value="medit">متوسطي (أبيض وطوب)</option><option value="arabic">عربي معاصر (مشربية)</option><option value="wabi">وابي سابي</option><option value="artdeco">آرت ديكو</option><option value="coastal">ساحلي</option></select></label>
                   <label class="mini">الإضاءة في الريندر <select id="aiLight"><option value="keep" selected>زي الموديل</option><option value="day">نهار طبيعي</option><option value="golden">ساعة الغروب الذهبية</option><option value="overcast">نهار غائم ناعم</option><option value="night">ليل بإضاءة دافية</option><option value="studio">إضاءة استوديو</option><option value="dramatic">درامي (تباين عالي)</option></select></label>
                   <button class="btn accent" data-studio="renderAI">🤖 اعمل الصورة</button>
@@ -373,6 +376,7 @@
 <script src="js/gen_classic.js"></script>
 <script src="js/gen_param.js"></script>
 <script src="js/gen_shop.js"></script>
+<script src="js/gen_facade.js"></script>
 <script src="js/presets_kitchen.js"></script>
 <script src="js/presets_wardrobe.js"></script>
 <script src="js/presets_furniture.js"></script>
@@ -385,6 +389,7 @@
 <script src="js/presets_market.js"></script>
 <script src="js/presets_179.js"></script>
 <script src="js/presets_shop.js"></script>
+<script src="js/presets_facade.js"></script>
 <script src="data/scenes.js"></script>
 <script src="js/prices.js"></script>
 <script src="js/prices_local.js"></script>
@@ -427,6 +432,7 @@
 <script src="js/guide.js"></script>
 <script src="js/shortcuts.js"></script>
 <script src="lib/qrcode.min.js"></script>
+<script src="data/logo.js"></script>
 <script src="js/x_core.js"></script>
 <script src="js/x_prod.js"></script>
 <script src="js/x_prod_pages.js"></script>
@@ -444,9 +450,13 @@
 <script src="js/x_help.js"></script>
 <script src="js/x_courses.js"></script>
   <script src="data/course_ai.js"></script>
+  <script src="data/course_su.js"></script>
   <script src="data/sig.js"></script>
-  <script src="js/x_aicourse.js"></script>
+  <script src="js/x_certkit.js"></script>
+    <script src="js/x_aicourse.js"></script>
   <script src="js/x_smart.js"></script>
+    <script src="js/x_photo.js"></script>
+    <script src="js/x_facade.js"></script>
 <script src="js/x_lang.js"></script>
 <script src="js/x_pv.js"></script>
 <script src="js/x_style.js"></script>
