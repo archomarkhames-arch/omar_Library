@@ -1,0 +1,112 @@
+# Builds the Omar Khamis Revit library for Revit 2017 → 2027, the installer and the update files.
+# Runs by itself when anything under revit/src or revit/installer is uploaded to GitHub.
+name: Revit library build
+
+on:
+  push:
+    branches: [main]
+    paths: ['revit/src/**', 'revit/installer/**', '.github/workflows/revit-build.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: revit-build
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Build every Revit version
+        id: build
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Continue'
+          $ver = (Get-Content revit/src/version.txt -Raw).Trim()
+          "OKR_VERSION=$ver" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          $out = "revit/_out"
+          New-Item -ItemType Directory -Force $out | Out-Null
+          $report = @("Revit library build $ver  —  $(Get-Date -Format 'yyyy-MM-dd HH:mm') UTC", "")
+          $ok = @()
+          foreach ($y in 2017..2027) {
+            $log = "$out/build_$y.log"
+            dotnet build revit/src/OmarKhamis.Revit.csproj -c Release -p:RevitVersion=$y -o "$out/$y" -nologo -v:minimal *> $log
+            if ($LASTEXITCODE -eq 0 -and (Test-Path "$out/$y/OmarKhamis.Revit.dll")) {
+              $ok += $y; $report += "R$y : OK"
+            } else {
+              $report += "R$y : FAILED"
+              $report += (Select-String -Path $log -Pattern ': error ' | Select-Object -First 25 | ForEach-Object { '    ' + $_.Line.Trim() })
+            }
+          }
+          $report += ""
+          $report += "built: $($ok -join ', ')"
+          New-Item -ItemType Directory -Force revit/update | Out-Null
+          $report | Out-File revit/update/build_report.txt -Encoding utf8
+          Get-Content revit/update/build_report.txt
+          "ok=$($ok -join ',')" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          if ($ok.Count -eq 0) { exit 1 }
+
+      - name: Update files + manifest
+        shell: pwsh
+        run: |
+          $ver = $env:OKR_VERSION
+          $ok = "${{ steps.build.outputs.ok }}".Split(',') | Where-Object { $_ }
+          Get-ChildItem revit/update -Filter 'R20*.zip' -ErrorAction SilentlyContinue | Remove-Item -Force
+          $notes = (Get-Content revit/src/notes.txt -Raw -Encoding utf8).Trim()
+          $m = [ordered]@{ version = $ver; notes = $notes; built = (Get-Date -Format 'yyyy-MM-dd') }
+          foreach ($y in $ok) {
+            $zip = "revit/update/R$y-$ver.zip"
+            Compress-Archive -Path "revit/_out/$y/OmarKhamis.Revit.dll" -DestinationPath $zip -Force
+            $sha = (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower()
+            $m["R$y"] = [ordered]@{ file = "R$y-$ver.zip"; sha256 = $sha }
+          }
+          $json = $m | ConvertTo-Json -Depth 4
+          [IO.File]::WriteAllText("$PWD/revit/update/manifest.json", $json, (New-Object Text.UTF8Encoding $false))
+          Get-Content revit/update/manifest.json
+
+      - name: Installer
+        shell: pwsh
+        run: |
+          $ok = "${{ steps.build.outputs.ok }}".Split(',') | Where-Object { $_ }
+          $lines = @()
+          foreach ($y in $ok) {
+            $lines += "Source: ""..\_out\$y\OmarKhamis.Revit.dll""; DestDir: ""{userappdata}\Autodesk\Revit\Addins\$y\OmarKhamis""; Flags: ignoreversion; Check: ShouldInstall('$y')"
+            $lines += "Source: ""OmarKhamis.addin""; DestDir: ""{userappdata}\Autodesk\Revit\Addins\$y""; Flags: ignoreversion; Check: ShouldInstall('$y')"
+          }
+          [IO.File]::WriteAllLines("$PWD/revit/installer/files.iss", $lines, (New-Object Text.UTF8Encoding $true))
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress | Out-Null }
+          & $iscc revit/installer/setup.iss
+          if ($LASTEXITCODE -ne 0) { "INSTALLER FAILED" | Out-File revit/update/build_report.txt -Append -Encoding utf8; exit 1 }
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OmarKhamis_Revit_${{ env.OKR_VERSION }}
+          path: |
+            revit/setup/OmarKhamis_Revit_Setup.exe
+            revit/update/
+
+      - name: Save results to the repo
+        if: always()
+        shell: pwsh
+        run: |
+          git config user.name  "revit-build"
+          git config user.email "actions@users.noreply.github.com"
+          git add revit/update revit/setup 2>$null
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "Revit build $env:OKR_VERSION [skip ci]"
+            git pull --rebase
+            git push
+          }
