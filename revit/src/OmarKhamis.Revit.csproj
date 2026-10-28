@@ -23,6 +23,8 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <EnableDynamicLoading>true</EnableDynamicLoading>
+    <!-- each Revit version builds into obj\<year>; never compile another year's generated files -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**;bin\**</DefaultItemExcludes>
     <DefineConstants>$(DefineConstants);R$(RevitVersion)</DefineConstants>
     <DefineConstants Condition="$(RevitVersion) &gt;= 2018">$(DefineConstants);RV2018_UP</DefineConstants>
     <DefineConstants Condition="$(RevitVersion) &gt;= 2019">$(DefineConstants);RV2019_UP</DefineConstants>
