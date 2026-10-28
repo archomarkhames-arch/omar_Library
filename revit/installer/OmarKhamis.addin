@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Omar Khamis Library</Name>
+    <Assembly>OmarKhamis\OmarKhamis.Revit.dll</Assembly>
+    <AddInId>D36BBDA6-CF83-50F1-BAB5-8B8F4C6E5CAA</AddInId>
+    <FullClassName>OmarKhamis.Revit.App</FullClassName>
+    <VendorId>OKHAMIS</VendorId>
+    <VendorDescription>Eng. Omar Khamis - 01005433170</VendorDescription>
+  </AddIn>
+</RevitAddIns>
