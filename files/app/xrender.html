@@ -43,8 +43,12 @@
   .xr-hist .h.on { border-color: var(--accent); } .xr-hist .h b { position: absolute; bottom: 0; inset-inline: 0; font-size: 9.5px; background: rgba(0,0,0,.6); color: #fff; text-align: center; font-weight: 400; }
   .xr-hist .lbl { color: var(--muted); font-size: 11.5px; flex: none; }
   .xr-prog { height: 4px; background: var(--line); border-radius: 3px; overflow: hidden; width: 160px; } .xr-prog i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  .xr-angles{margin:6px 0 8px}.xr-angles summary{font-weight:700}.xr-angles .xr-q{flex-wrap:wrap}.xr-angles .chip{font-size:12px;white-space:nowrap}
   .xr-eng{display:flex;gap:0;border:1px solid var(--line2);border-radius:10px;overflow:hidden}.xr-eng .chip{flex:1;border-radius:0;border:0;padding:9px 6px;font-weight:700}.xr-eng .chip.on{background:var(--accent);color:var(--on-accent,#111)}
   .btn.flash{animation:okflash .5s 3}@keyframes okflash{50%{box-shadow:0 0 0 4px var(--accent);transform:scale(1.04)}}
+
+.xr-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.xr-card{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:8px 4px;color:var(--text);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;font-family:inherit}.xr-card i{font-style:normal;font-size:20px;line-height:1}.xr-card span{font-size:12px;font-weight:700}.xr-card small{font-size:10px;color:var(--muted)}.xr-card.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.xr-chips{display:flex;flex-wrap:wrap;gap:4px}.xr-chips .chip{font-size:11.5px}.xr-vars{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.xr-vars img{width:72px;height:48px;object-fit:cover;border-radius:6px;border:2px solid transparent;cursor:pointer}.xr-vars img.on{border-color:var(--accent)}.xr-vars .wait{width:72px;height:48px;border-radius:6px;background:var(--panel2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px}
 </style>
 <script src="js/i18n.js"></script>
 </head>
@@ -53,6 +57,10 @@
   <aside class="xr-side">
     <div class="xr-logo"><canvas id="xrLogo" width="420" height="80"></canvas></div>
     <div class="xr-eng"><button class="chip on" data-eng="pt">🎯 واقعي — مجاني</button><button class="chip" data-eng="ai">🤖 ذكاء اصطناعي</button></div>
+    <details class="xr-sec xr-angles" id="xrAngles"><summary>🎥 زاوية تانية بنفس الإعدادات</summary>
+      <div class="xr-q"><button class="chip" data-o="left" title="لف الكاميرا 30° حوالين الهدف">⟲ شمال 30°</button><button class="chip" data-o="right">⟳ يمين 30°</button><button class="chip" data-o="closer">أقرب</button><button class="chip" data-o="farther">أبعد</button><button class="chip" data-o="up">أعلى</button><button class="chip" data-o="down">أوطى</button><button class="chip" data-o="eye">👁 مستوى العين</button><button class="chip" data-o="front">واجهة</button><button class="chip" data-o="iso">زاوية 45°</button><button class="chip" data-o="top">من فوق</button></div>
+      <label class="xr-note" style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="checkbox" id="xrAuto" checked> ريندر تلقائي بنفس الإعدادات بعد تغيير الزاوية (بنفس المحرك والستايل والإضافات)</label>
+    </details>
     <div id="ptPanel">
       <p class="xr-note"><b style="color:var(--accent)">OK Render</b> — محرك ريندر المكتبة نفسها على كارت الشاشة بتاعك: ضوء وانعكاسات وظلال حقيقية (Path Tracing) زي الفيري والكورونا — من غير إنترنت ولا مفتاح. بيرندر أي موديل حتى لو متظبط للفيري (الخامات والتكسشرز والإضاءات بتاعته).</p>
       <h4>💬 وصف المشهد (اختياري)</h4>
@@ -115,6 +123,28 @@
     <h4>الجودة</h4>
     <div class="xr-q"><button class="chip on" data-q="fast">⚡ مجاني (سيرفر المكتبة)</button><button class="chip" data-q="high">💎 أعلى جودة (مفتاحك)</button></div>
     <label class="xchk" style="margin-top:6px"><input type="checkbox" id="xrUsePT" checked> ابدأ من الريندر الواقعي اللي على الشاشة (أدق وأحلى بكتير) — اعمل 🎯 الأول</label>
+    <h4>🎨 ستايل بضغطة</h4>
+    <div class="xr-cards" id="xrCards">
+      <button class="xr-card on" data-c="real" data-mode="real" data-light="keep" data-style="keep"><i>📷</i><span>زي التصميم</span><small>نفس الخامات، بس حقيقي</small></button>
+      <button class="xr-card" data-c="luxury" data-mode="real" data-light="day" data-style="modern" data-p="luxury hotel feel: book-matched marble, brushed gold details, warm hidden LED strips, walnut wood"><i>💎</i><span>مودرن فاخر</span><small>رخام وذهبي وخشب دافي</small></button>
+      <button class="xr-card" data-c="warm" data-mode="real" data-light="golden" data-style="keep" data-p="warm oak wood, cream and beige palette, soft linen textures, cozy evening glow"><i>🌤</i><span>دافي</span><small>خشب وبيج وغروب</small></button>
+      <button class="xr-card" data-c="classic" data-mode="real" data-light="day" data-style="classic" data-p="elegant classic details, moulded panels, crystal chandelier, cream and gold palette"><i>🏛</i><span>كلاسيك</span><small>تفاصيل ونجف</small></button>
+      <button class="xr-card" data-c="neo" data-mode="real" data-light="day" data-style="neo" data-p="refined neoclassic, slim wall panels, marble, brass, muted greige palette"><i>👑</i><span>نيو كلاسيك</span><small>بانوهات ورخام</small></button>
+      <button class="xr-card" data-c="minimal" data-mode="real" data-light="overcast" data-style="minimal" data-p="calm minimalist, white and light wood, clean lines, lots of natural light"><i>◻</i><span>مينيمال</span><small>أبيض وخشب فاتح</small></button>
+      <button class="xr-card" data-c="japandi" data-mode="real" data-light="day" data-style="japandi" data-p="japandi: light ash wood, paper lantern lighting, soft neutral textiles, zen calm"><i>🎋</i><span>جابندي</span><small>هادي وطبيعي</small></button>
+      <button class="xr-card" data-c="night" data-mode="night" data-light="night" data-style="keep" data-p="all lamps and hidden LED on, warm cozy evening, deep blue dusk outside the windows"><i>🌙</i><span>ليلي</span><small>بالإضاءة المخفية</small></button>
+      <button class="xr-card" data-c="sketch" data-mode="sketch" data-light="keep" data-style="keep"><i>✏</i><span>اسكتش</span><small>حبر وألوان مائية</small></button>
+      <button class="xr-card" data-c="cutaway" data-mode="cutaway" data-light="keep" data-style="keep"><i>🏠</i><span>دول هاوس</span><small>مجسم مقطوع</small></button>
+      <button class="xr-card" data-c="moodboard" data-mode="moodboard" data-light="keep" data-style="keep"><i>🎨</i><span>مود بورد</span><small>خامات وألوان</small></button>
+    </div>
+    <h4>➕ إضافات للصورة</h4>
+    <div class="xr-chips" id="xrExtras">
+      <button class="chip" data-x="person_f">👩 سيدة أنيقة</button><button class="chip" data-x="person_m">🧑 رجل أنيق</button><button class="chip" data-x="family">👨‍👩‍👧 عيلة</button>
+      <button class="chip" data-x="city">🌆 منظر مدينة في الشباك</button><button class="chip" data-x="garden">🌳 منظر حديقة</button><button class="chip" data-x="sea">🌊 منظر بحر</button>
+      <button class="chip" data-x="plants">🌿 نباتات</button><button class="chip" data-x="decor">🕯 إكسسوارات وشموع</button><button class="chip" data-x="rain">🌧 مطر على الزجاج</button><button class="chip" data-x="sunrays">☀ أشعة شمس</button>
+    </div>
+    <div class="xr-row" style="margin-top:6px"><span class="xr-note" style="margin:0">عدد البدائل</span><div class="xr-q"><button class="chip on" data-n="1">1</button><button class="chip" data-n="2">2</button><button class="chip" data-n="4">4</button></div></div>
+    <details class="xr-sec"><summary>⚙ تفاصيل أكتر (نوع الصورة / الإضاءة / الستايل)</summary>
     <h4>نوع الصورة</h4>
     <select id="xrMode"><option value="real">ريندر واقعي — نفس الزاوية والشكل</option><option value="night">ليلي بالإضاءة</option><option value="sketch">اسكتش يدوي ألوان مائية</option><option value="cutaway">مجسم أيزومتري (Dollhouse)</option><option value="moodboard">مود بورد خامات</option></select>
     <h4>الإضاءة</h4>
@@ -123,7 +153,9 @@
     <select id="xrStyle"><option value="keep">زي التصميم</option><option value="modern">مودرن</option><option value="classic">كلاسيك</option><option value="neo">نيو كلاسيك</option><option value="minimal">مينيمال</option><option value="japandi">جابندي</option><option value="industrial">إندستريال</option><option value="luxury">فخم</option><option value="scandi">إسكندنافي</option><option value="arabic">عربي معاصر</option><option value="boho">بوهو</option></select>
     <h4>وصف (اختياري)</h4>
     <textarea id="xrPrompt" placeholder="مثلاً: خشب جوز، رخام أبيض، إضاءة مخفية دافية"></textarea>
+    </details>
     <div class="xbtns" style="margin-top:10px"><button class="btn" id="xrShot">📷 خد المنظور الحالي</button><button class="btn accent" id="xrGo">✨ ريندر</button></div>
+    <div class="xr-vars" id="xrVars" style="display:none"></div>
     </div>
     <h4>تعديل جزء من الصورة</h4>
     <div class="xbtns"><button class="btn" id="xrBrush">🖌 لوّن الجزء</button><button class="btn ghost" id="xrClear">مسح</button></div>
