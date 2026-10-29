@@ -119,6 +119,9 @@ main { flex: 1; min-height: 0; position: relative; }
 .mb-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
 select { background: var(--panel2); border: 1px solid var(--line2); border-radius: 8px; padding: 5px 8px; }
 
+input:not([type]), input[type=text], input[type=number], input[type=search], input[type=email], input[type=url], input[type=password], input[type=date], textarea { background: var(--panel2); border: 1px solid var(--line2); border-radius: 8px; padding: 4px 8px; color: var(--text); font-family: inherit; }
+input::placeholder, textarea::placeholder { color: var(--faint); opacity: 1; }
+
 .sec-title { margin: 16px 14px 0; font-size: 14px; color: var(--muted); font-weight: 600; }
 .mine-group { margin: 6px 0; }
 .note { margin: 14px; padding: 14px 16px; border: 1px dashed var(--line2); border-radius: 10px; color: var(--muted); line-height: 1.9; }

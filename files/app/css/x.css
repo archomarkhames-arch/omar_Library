@@ -294,6 +294,8 @@ body.pe-compact #xPartEdit{position:fixed!important;inset:0!important;width:auto
 @font-face{font-family:'OKC Naskh';src:url(../fonts/noto-naskh-arabic-arabic-700-normal.woff2) format('woff2');font-weight:700}
 @font-face{font-family:'OKC SigEn';src:url(../fonts/monsieur-la-doulaise-latin-400-normal.woff2) format('woff2');font-weight:400}
 @font-face{font-family:'OKC SigAr';src:url(../fonts/aref-ruqaa-arabic-700-normal.woff2) format('woff2');font-weight:700}
+@font-face{font-family:'OKC Naskh';src:url(../fonts/amiri-arabic-700-normal.woff2) format('woff2');font-weight:700}
+@font-face{font-family:'OKC Script';src:url(../fonts/great-vibes-latin-400-normal.woff2) format('woff2');font-weight:400}
 .aic-qz{border:1px solid var(--line2);border-radius:12px;padding:12px 14px;margin:10px 0;background:var(--panel)}.aic-qz h3{margin:0 0 6px;color:var(--accent);font-size:16px}
 .aic-q{border-top:1px dashed var(--line2);padding:10px 0;line-height:1.9}.aic-q>b{display:block;margin-bottom:4px}
 .aic-q label{display:flex;gap:8px;align-items:flex-start;padding:3px 6px;border-radius:8px;cursor:pointer}.aic-q label:hover{background:rgba(255,255,255,.04)}
@@ -307,7 +309,7 @@ body.pe-compact #xPartEdit{position:fixed!important;inset:0!important;width:auto
 .aic-adm{color:var(--accent);font-weight:600}
 .aic-checks{margin:4px 0 8px;padding-inline-start:20px;line-height:1.9;font-size:13.5px}
 .aic-srow{display:flex;gap:8px;align-items:center;justify-content:space-between;border-top:1px dashed var(--line2);padding:6px 0;font-size:13.5px}
-.aic-form{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:8px 0}.aic-form label{display:flex;flex-direction:column;gap:3px;font-size:12.5px}.aic-form input,.aic-form select{width:100%;box-sizing:border-box}
+.aic-form{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin:8px 0}.aic-form label{display:flex;flex-direction:column;gap:3px;font-size:12.5px}.aic-form input,.aic-form select{width:100%;box-sizing:border-box}.aic-form label[hidden]{display:none}
 .aic-sigs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 12px}.aic-sig{background:#fff;border:2px solid transparent;border-radius:10px;padding:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;height:90px;position:relative}
 .aic-sig input{position:absolute;opacity:0}.aic-sig img{max-width:100%;max-height:78px}.aic-sig:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
 
@@ -321,5 +323,5 @@ body.pe-compact #xPartEdit{position:fixed!important;inset:0!important;width:auto
 
 
 .fc-wrap{display:flex;gap:14px;align-items:flex-start}.fc-side{width:330px;flex:none;display:flex;flex-direction:column;gap:8px}.fc-side label{display:block;font-size:13px}.fc-side input,.fc-side select{width:100%;margin-top:2px;box-sizing:border-box}.fc-side input[type=number],.fc-side select{background:var(--bg);color:var(--text);border:1px solid var(--line2);border-radius:7px;padding:4px 7px;outline:none;font-family:inherit}.fc-side input[type=color]{height:30px;padding:2px;border:1px solid var(--line2);border-radius:7px;background:var(--bg)}
-.fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.fc-main{flex:1;min-width:0}.fc-cv{width:100%;border-radius:10px;background:#f3f1ec;display:block}.fc-views{display:flex;gap:6px;margin-top:6px}.fc-cnt{font-size:12px;opacity:.75;margin-top:6px}
+.fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.fc-side label.xnote{display:flex;gap:8px;align-items:flex-start}.fc-side label.xnote input{margin-top:3px;flex:none}.fc-full{border:1px solid var(--line2);border-radius:10px;padding:8px;margin-top:4px;background:var(--panel)}.fc-fullopts[hidden]{display:none}.fc-full .xbtns{margin-top:6px}.fc-main{flex:1;min-width:0}.fc-cv{width:100%;border-radius:10px;background:#f3f1ec;display:block}.fc-views{display:flex;gap:6px;margin-top:6px}.fc-cnt{font-size:12px;opacity:.75;margin-top:6px}
 .ph-modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}.ph-modes .btn{flex:1}.ph-help{font-size:13px;opacity:.85;line-height:1.7;margin-bottom:8px}
