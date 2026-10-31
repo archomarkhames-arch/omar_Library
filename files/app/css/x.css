@@ -334,3 +334,32 @@ body.pe-compact #xPartEdit{position:fixed!important;inset:0!important;width:auto
 
 
 .lt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.lt-grid label{display:block;font-size:12px}.lt-grid input,.lt-grid select{width:100%;box-sizing:border-box;margin-top:2px}.lt-card{background:rgba(176,141,87,.12);border-radius:10px;padding:10px;margin:8px 0;line-height:1.8}.lt-big{font-size:20px}.lt-big b{font-size:30px;color:var(--accent)}.lt-row{font-size:13px}.lt-room{font-size:12px;opacity:.85}
+
+#pane-tools { overflow: auto; padding: 14px 18px 40px; }
+#pane-tools.on { display: grid; grid-template-columns: minmax(0, 1fr) minmax(380px, 520px); grid-template-rows: auto auto 1fr; gap: 0 18px; align-items: start; }
+#pane-tools.on > .tl-head { grid-column: 1 / -1; }
+#pane-tools.on > .tl-grid, #pane-tools.on > .tl-cards { grid-column: 1; grid-row: 2 / span 2; }
+#pane-tools.on > .tl-form { grid-column: 2; grid-row: 2; margin-top: 0; position: sticky; top: 0; }
+#pane-tools.on > .tl-info { grid-column: 2; grid-row: 3; }
+#pane-tools.on > .tl-agent, #pane-tools.on > .tl-plan { grid-column: 1 / -1; }
+#pane-tools .tl-head h2 { margin: 0 0 4px; color: var(--accent); }
+#pane-tools .tl-tabs { flex-wrap: wrap; margin: 8px 0 10px; }
+#pane-tools .tl-grid { display: flex; flex-direction: column; gap: 10px; }
+#pane-tools .tl-grp h4 { margin: 6px 0; color: var(--accent2); font-size: 13px; }
+#pane-tools .tl-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+#pane-tools .tl-card { width: 158px; background: var(--panel2); border: 1.5px solid var(--line2); border-radius: 10px; padding: 4px; cursor: pointer; color: var(--text); font-family: inherit; text-align: center; }
+#pane-tools .tl-card canvas { width: 150px; height: 84px; display: block; background: #eceae5; border-radius: 7px; }
+#pane-tools .tl-card b { display: block; font-size: 11.5px; padding: 4px 2px 2px; font-weight: 600; }
+#pane-tools .tl-card.sm { width: 150px; padding: 8px 4px; }
+#pane-tools .tl-card .tl-ic { display: block; font-size: 26px; line-height: 34px; color: var(--accent); }
+#pane-tools .tl-card.on { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(217,164,65,.3); }
+#pane-tools .tl-form { margin-top: 12px; background: var(--panel); border: 1px solid var(--line2); border-radius: 12px; padding: 10px 14px; max-width: 760px; }
+#pane-tools .tl-form h3 { margin: 4px 0; color: var(--accent); }
+#pane-tools .tl-form .xrow > span { flex: 0 0 210px; }
+#pane-tools .tl-form .xrow select { width: 260px; }
+#pane-tools .badge { background: var(--accent); color: var(--on-accent); border-radius: 999px; padding: 1px 8px; font-size: 11px; }
+#pane-tools .tl-info { margin-top: 8px; }
+#pane-tools textarea.ag-t { width: 100%; max-width: 760px; background: var(--bg); color: var(--text); border: 1px solid var(--line2); border-radius: 8px; padding: 8px; font-family: inherit; }
+#pane-tools .tl-agent, #pane-tools .tl-plan { max-width: 780px; }
+#pane-tools .tl-plan .xrow select, #pane-tools .tl-plan .xrow input, #pane-tools .tl-agent .xrow select { width: 360px; }
+#pane-tools .tl-plan .xrow > span, #pane-tools .tl-agent .xrow > span { flex: 0 0 200px; }
